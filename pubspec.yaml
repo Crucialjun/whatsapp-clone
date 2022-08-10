@@ -39,6 +39,9 @@ dependencies:
   cloud_firestore: ^3.4.3
   riverpod: ^1.0.3
   flutter_riverpod: ^1.0.4
+  file_picker: ^5.0.1
+  image_picker: ^0.8.5+3
+  firebase_storage: ^10.3.4
 
 dev_dependencies:
   flutter_test:
