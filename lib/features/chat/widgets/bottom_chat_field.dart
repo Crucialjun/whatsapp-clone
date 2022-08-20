@@ -1,23 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_ui/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BottomChatField extends StatefulWidget {
+import 'package:whatsapp_ui/colors.dart';
+import 'package:whatsapp_ui/features/chat/controller/chat_controller.dart';
+
+class BottomChatField extends ConsumerStatefulWidget {
+  final String receiverUid;
   const BottomChatField({
     Key? key,
+    required this.receiverUid,
   }) : super(key: key);
 
   @override
-  State<BottomChatField> createState() => _BottomChatFieldState();
+  ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
 }
 
-class _BottomChatFieldState extends State<BottomChatField> {
+class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   bool isShowSendButton = false;
+  final TextEditingController _messageController = TextEditingController();
+
+  void sendTextMessage() async {
+    if (isShowSendButton) {
+      ref.read(chatControllerProvider).sendTextMessage(
+          context, _messageController.text.trim(), widget.receiverUid);
+    }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: TextField(
+            controller: _messageController,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 setState(() {
@@ -97,10 +118,15 @@ class _BottomChatFieldState extends State<BottomChatField> {
             radius: 25,
             backgroundColor: const Color(0xFF128C7E),
             child: isShowSendButton
-                ? const Center(
-                    child: Icon(
-                      Icons.send,
-                      color: Colors.white,
+                ? Center(
+                    child: InkWell(
+                      onTap: () {
+                        sendTextMessage();
+                      },
+                      child: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
                     ),
                   )
                 : const Center(

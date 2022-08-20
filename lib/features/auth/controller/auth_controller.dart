@@ -15,8 +15,12 @@ class AuthController {
     this.ref,
   );
 
+  Stream authStateChanges() {
+    return _authRepository.checkUserAuthState();
+  }
+
   Future<UserModel?> getUserData() async {
-    final userData = await _authRepository.getCurrentUserData();
+    final userData = ref.read(authRepositoryProvider).getCurrentUserData();
     return userData;
   }
 
@@ -44,7 +48,6 @@ final authControllerProvider = Provider((ref) {
   return AuthController(authRepository, ref);
 });
 
-final userAuthProvider = FutureProvider((ref) {
-  final authcontroller = ref.watch(authControllerProvider);
-  return authcontroller.getUserData();
+final userAuthProvider = StreamProvider((ref) {
+  return ref.watch(authControllerProvider).authStateChanges();
 });

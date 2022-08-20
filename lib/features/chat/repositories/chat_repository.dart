@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:whatsapp_ui/common/enums/message_enum.dart';
 import 'package:whatsapp_ui/common/utils/utils.dart';
 import 'package:whatsapp_ui/models/chat_contact.dart';
+import 'package:whatsapp_ui/models/message_model.dart';
 import 'package:whatsapp_ui/models/user_model.dart';
 
 class ChatRepository {
@@ -40,7 +42,7 @@ class ChatRepository {
       _saveMessageToMessageSubCollection(
           sender: sender,
           receiver: receiverUserData,
-          message: message,
+          messageText: message,
           timeSent: timeSent,
           messageType: MessageEnum.text,
           messageId: messageId);
@@ -87,10 +89,44 @@ class ChatRepository {
 
   void _saveMessageToMessageSubCollection({
     required UserModel receiver,
-    required String message,
+    required String messageText,
     required DateTime timeSent,
     required String messageId,
     required UserModel sender,
     required MessageEnum messageType,
-  }) async {}
+  }) async {
+    final MessageModel message = MessageModel(
+        senderId: sender.uid,
+        receiverId: receiver.uid,
+        message: messageText,
+        messageType: messageType,
+        timeSent: timeSent,
+        messageId: messageId,
+        isSeen: false);
+
+    await firestore
+        .collection('users')
+        .doc(sender.uid)
+        .collection('chats')
+        .doc(receiver.uid)
+        .collection('messages')
+        .doc(messageId)
+        .set(message.toMap());
+
+    await firestore
+        .collection('users')
+        .doc(receiver.uid)
+        .collection('chats')
+        .doc(sender.uid)
+        .collection('messages')
+        .doc(messageId)
+        .set(message.toMap());
+  }
 }
+
+final chatRepositoryProvider = Provider((ref) {
+  return ChatRepository(
+    firestore: FirebaseFirestore.instance,
+    auth: FirebaseAuth.instance,
+  );
+});

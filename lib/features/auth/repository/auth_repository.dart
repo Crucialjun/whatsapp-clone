@@ -17,6 +17,10 @@ class AuthRepository {
 
   AuthRepository(this.auth, this.firestore);
 
+  Stream checkUserAuthState() {
+    return auth.authStateChanges();
+  }
+
   Future<UserModel?> getCurrentUserData() async {
     final userData =
         await firestore.collection('users').doc(auth.currentUser?.uid).get();
