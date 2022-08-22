@@ -23,6 +23,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     if (isShowSendButton) {
       ref.read(chatControllerProvider).sendTextMessage(
           context, _messageController.text.trim(), widget.receiverUid);
+      _messageController.clear();
     }
   }
 
