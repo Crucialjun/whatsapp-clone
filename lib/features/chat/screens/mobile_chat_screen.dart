@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_ui/colors.dart';
-import 'package:whatsapp_ui/common/widgets/loader.dart';
 import 'package:whatsapp_ui/features/auth/controller/auth_controller.dart';
 import 'package:whatsapp_ui/widgets/chat_list.dart';
 
@@ -23,25 +22,22 @@ class MobileChatScreen extends ConsumerWidget {
         title: StreamBuilder<UserModel>(
             stream: ref.read(authControllerProvider).userDatabyId(uid),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return const LoaderScreen();
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
 
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  Column(
-                    children: [
-                      Text(name),
-                      Text(
-                        snapshot.data!.isOnline ? "Online" : "Offline",
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.normal),
-                      )
-                    ],
-                  );
-                }
-              }
-              return Container();
+              return Column(
+                children: [
+                  Text(name),
+                  Text(
+                    snapshot.data?.isOnline ?? false ? "Online" : "Offline",
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.normal),
+                  )
+                ],
+              );
             }),
         centerTitle: false,
         actions: [
@@ -61,8 +57,8 @@ class MobileChatScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: ChatList(),
+          Expanded(
+            child: ChatList(uid),
           ),
           BottomChatField(receiverUid: uid),
         ],

@@ -17,6 +17,27 @@ class ChatRepository {
     required this.auth,
   });
 
+  Stream<List<MessageModel>> getChatStream(String receiverUid) {
+    print("all messages called");
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverUid)
+        .collection('messages')
+        .orderBy("timeSent")
+        .snapshots()
+        .map((event) {
+      List<MessageModel> mesaages = [];
+      for (var element in event.docs) {
+        mesaages.add(MessageModel.fromMap(element.data()));
+        print("all messages ${element.data()}");
+      }
+
+      return mesaages;
+    });
+  }
+
   Stream<List<ChatContact>> getChatContacts() {
     return firestore
         .collection('users')
