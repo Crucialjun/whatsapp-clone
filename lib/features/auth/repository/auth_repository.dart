@@ -103,6 +103,13 @@ class AuthRepository {
       return UserModel.fromMap(event.data()!);
     });
   }
+
+  void setUserState(bool isOnline) async {
+    await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .update({'isOnline': isOnline});
+  }
 }
 
 final authRepositoryProvider = Provider(((ref) => AuthRepository(
