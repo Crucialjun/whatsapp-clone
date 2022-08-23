@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:whatsapp_ui/colors.dart';
+import 'package:whatsapp_ui/common/widgets/loader.dart';
 import 'package:whatsapp_ui/features/chat/controller/chat_controller.dart';
 import 'package:whatsapp_ui/features/chat/screens/mobile_chat_screen.dart';
 import 'package:whatsapp_ui/models/chat_contact.dart';
@@ -16,6 +17,9 @@ class ContactsList extends ConsumerWidget {
       child: StreamBuilder<List<ChatContact>>(
           stream: ref.read(chatControllerProvider).chatContact(),
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoaderScreen();
+            }
             return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -25,14 +29,11 @@ class ContactsList extends ConsumerWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const MobileChatScreen(
-                              name: "RR",
-                              uid: "12345",
-                            ),
-                          ),
-                        );
+                        Navigator.pushNamed(context, MobileChatScreen.routeName,
+                            arguments: {
+                              "name": chatContactData.name,
+                              "uid": chatContactData.contactId
+                            });
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
