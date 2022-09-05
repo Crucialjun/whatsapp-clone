@@ -96,6 +96,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           children: [
             Expanded(
               child: TextField(
+                focusNode: focusNode,
                 controller: _messageController,
                 onChanged: (value) {
                   if (value.isNotEmpty) {
@@ -117,7 +118,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                       children: [
                         IconButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () {},
+                          onPressed: toogleEmojiKeyboardContainer,
                           icon: const Icon(
                             Icons.emoji_emotions,
                             color: Colors.grey,
@@ -199,17 +200,25 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             )
           ],
         ),
-        SizedBox(
-          height: 310,
-          child: EmojiPicker(
-            onEmojiSelected: ((category, emoji) {
-              setState(() {
-                _messageController.text =
-                    "${_messageController.text} ${emoji.emoji}";
-              });
-            }),
-          ),
-        )
+        isShowEmoji
+            ? SizedBox(
+                height: 310,
+                child: EmojiPicker(
+                  onEmojiSelected: ((category, emoji) {
+                    setState(() {
+                      _messageController.text =
+                          "${_messageController.text} ${emoji.emoji}";
+                    });
+
+                    if (!isShowSendButton) {
+                      setState(() {
+                        isShowSendButton = true;
+                      });
+                    }
+                  }),
+                ),
+              )
+            : const SizedBox()
       ],
     );
   }
