@@ -50,18 +50,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBeRxemmsUfnGkx7fqJ6g7pHgtlVi2O2xs',
-    appId: '1:770338737232:web:9a562973cb077da75f9555',
+    apiKey: 'AIzaSyDDIiCnaB8onHXPvE2NSErNS7nxj1qV-gE',
+    appId: '1:770338737232:web:4b68683eb592c8fc5f9555',
     messagingSenderId: '770338737232',
     projectId: 'whatsappclone-ede88',
     authDomain: 'whatsappclone-ede88.firebaseapp.com',
     storageBucket: 'whatsappclone-ede88.appspot.com',
-    measurementId: 'G-M7FR7F66K1',
+    measurementId: 'G-RCBXL9G1CJ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBjojaj8QVjkfP8OOEM_gLBhciYK2CNHBo',
-    appId: '1:770338737232:android:16c1359a09d596925f9555',
+    apiKey: 'AIzaSyA8NYsXxTjUXNvsbfvAEnFFk8ADoz1qdbk',
+    appId: '1:770338737232:android:cdd1e7c14b537eb35f9555',
     messagingSenderId: '770338737232',
     projectId: 'whatsappclone-ede88',
     storageBucket: 'whatsappclone-ede88.appspot.com',

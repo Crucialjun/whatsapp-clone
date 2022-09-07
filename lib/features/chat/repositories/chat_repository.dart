@@ -21,7 +21,6 @@ class ChatRepository {
   });
 
   Stream<List<MessageModel>> getChatStream(String receiverUid) {
-    print("all messages called");
     return firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
