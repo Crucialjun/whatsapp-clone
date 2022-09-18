@@ -68,6 +68,30 @@ class ChatController {
         },
         loading: () {});
   }
+
+  void sendGifMessage(
+      {required BuildContext context,
+      required String gifUrl,
+      required String receiverUid}) async {
+    UserModel? sender = await ref.read(authControllerProvider).getUserData();
+
+    int gifPartIndex = gifUrl.lastIndexOf("-") + 1;
+    String gifUrlPart = gifUrl.substring(gifPartIndex);
+    String fullGifUrl = "https://i.giphy.com/media/$gifUrlPart/200.gif";
+
+    ref.read(userAuthProvider).when(
+        data: (value) {
+          chatRepository.sendGifMessage(
+              context: context,
+              gifUrl: fullGifUrl,
+              receiverId: receiverUid,
+              sender: sender!);
+        },
+        error: (error, trace) {
+          showSnackbar(context, error.toString());
+        },
+        loading: () {});
+  }
 }
 
 final chatControllerProvider = Provider(((ref) {

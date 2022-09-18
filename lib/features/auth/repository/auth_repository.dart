@@ -35,8 +35,9 @@ class AuthRepository {
     try {
       auth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
+          timeout: const Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential credential) async {
-            await auth.signInWithCredential(credential);
+            //await auth.signInWithCredential(credential);
           },
           verificationFailed: (e) {
             throw Exception(e.message);
@@ -56,9 +57,10 @@ class AuthRepository {
     try {
       final credential = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: otp);
-      await auth.signInWithCredential(credential);
-      Navigator.pushNamedAndRemoveUntil(
-          context, UserInformationScreen.routeName, (route) => false);
+      await auth.signInWithCredential(credential).then((value) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, UserInformationScreen.routeName, (route) => false);
+      });
     } on FirebaseAuthException catch (e) {
       showSnackbar(context, e.message.toString());
     }

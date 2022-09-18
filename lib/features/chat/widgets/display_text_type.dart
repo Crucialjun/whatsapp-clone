@@ -24,6 +24,8 @@ class DisplayTextType extends StatelessWidget {
           )
         : messageType == MessageEnum.image
             ? CachedNetworkImage(imageUrl: message)
-            : VideoPlayerItem(videoUrl: message);
+            : messageType == MessageEnum.gif
+                ? CachedNetworkImage(imageUrl: message)
+                : VideoPlayerItem(videoUrl: message);
   }
 }

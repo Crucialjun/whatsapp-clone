@@ -230,6 +230,40 @@ class ChatRepository {
       showSnackbar(context, e.toString());
     }
   }
+
+  void sendGifMessage({
+    required BuildContext context,
+    required String gifUrl,
+    required String receiverId,
+    required UserModel sender,
+  }) async {
+    try {
+      var timeSent = DateTime.now();
+      UserModel receiverUserData;
+      var messageId = const Uuid().v4();
+
+      var receiverDataSnapshot =
+          await firestore.collection('users').doc(receiverId).get();
+
+      receiverUserData = UserModel.fromMap(receiverDataSnapshot.data()!);
+
+      _saveDataToContactsSubCollection(
+          sender: sender,
+          receiver: receiverUserData,
+          message: gifUrl,
+          timeSent: timeSent);
+
+      _saveMessageToMessageSubCollection(
+          sender: sender,
+          receiver: receiverUserData,
+          messageText: gifUrl,
+          timeSent: timeSent,
+          messageType: MessageEnum.gif,
+          messageId: messageId);
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+  }
 }
 
 final chatRepositoryProvider = Provider((ref) {

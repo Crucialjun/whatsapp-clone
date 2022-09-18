@@ -42,6 +42,14 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
         messageType: messageType);
   }
 
+  void sendGifMessage({required String gifUrl}) {
+    ref.read(chatControllerProvider).sendGifMessage(
+          context: context,
+          gifUrl: gifUrl,
+          receiverUid: widget.receiverUid,
+        );
+  }
+
   void selectimage() async {
     File? file = await pickImageFromGallery(context);
     if (file != null) {
@@ -53,6 +61,13 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     File? file = await pickVideoFromGallery(context);
     if (file != null) {
       sendFileMessage(file: file, messageType: MessageEnum.video);
+    }
+  }
+
+  void selectGif() async {
+    final file = await pickGif(context);
+    if (file != null) {
+      sendGifMessage(gifUrl: file.bitlyUrl);
     }
   }
 
@@ -126,7 +141,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                         ),
                         IconButton(
                             padding: EdgeInsets.zero,
-                            onPressed: () {},
+                            onPressed: () {
+                              selectGif();
+                            },
                             icon: const Icon(
                               Icons.gif,
                               color: Colors.grey,
